@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MEDUSAELITE — Your Fans. Your Data. Your Empire.</title>
 <meta name="description" content="The monetization operating system for creators. Own your fan graph. Launching 2026.">
+<!-- social share cards — update og:url/og:image host when the custom domain lands -->
+<link rel="canonical" href="https://medusacoven.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MedusaElite">
+<meta property="og:title" content="MEDUSAELITE — Your Fans. Your Data. Your Empire.">
+<meta property="og:description" content="The monetization OS for creators. Own your fan graph. Export everything. Leave anytime. Founding-creator handles open Q4 2026 — waitlist claims first.">
+<meta property="og:url" content="https://medusacoven.vercel.app/">
+<meta property="og:image" content="https://medusacoven.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MEDUSAELITE — Your Fans. Your Data. Your Empire.">
+<meta name="twitter:description" content="Own your fan graph. Export everything. Leave anytime. Founding-creator handles open Q4 2026.">
+<meta name="twitter:image" content="https://medusacoven.vercel.app/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -173,6 +187,21 @@
   .success h2{font-family:var(--syne);font-weight:700;font-size:1.05rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
   .success p{margin-top:8px;font-size:.92rem;color:var(--muted);line-height:1.6}
   .success p b{color:var(--bone);font-weight:500}
+  .share-row{
+    display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;justify-content:center;
+  }
+  .share-row a,.share-row button{
+    font-family:var(--syne);font-weight:700;text-transform:uppercase;
+    letter-spacing:.12em;font-size:.72rem;
+    padding:11px 18px;border-radius:999px;cursor:pointer;text-decoration:none;
+    background:transparent;color:var(--gold);
+    border:1px solid rgba(212,175,55,.45);
+    transition:background .25s,color .25s,border-color .25s;
+  }
+  .share-row a:hover,.share-row button:hover{
+    background:var(--gold);color:var(--ink);border-color:var(--gold);
+    box-shadow:none;transform:none;
+  }
 
   /* ---------- footer ---------- */
   footer{
@@ -262,6 +291,10 @@
   <div class="success rise" id="success" role="status">
     <h2>You're in the Coven</h2>
     <p id="successMsg"></p>
+    <div class="share-row">
+      <a id="shareX" href="#" target="_blank" rel="noopener">Share on X</a>
+      <button type="button" id="shareCopy">Copy my link</button>
+    </div>
   </div>
 </main>
 
@@ -282,6 +315,10 @@
   const btn = document.getElementById('submitBtn');
   const successBox = document.getElementById('success');
   const successMsg = document.getElementById('successMsg');
+
+  // ── Referral loop: arriving via someone's share link credits their handle.
+  const REF = (new URLSearchParams(location.search).get('r') || '')
+    .replace(/[^a-zA-Z0-9_]/g, '').slice(0, 24).toLowerCase();
 
   document.getElementById('handle').addEventListener('input', e => {
     e.target.value = e.target.value.replace(/[^a-zA-Z0-9_]/g, '').toLowerCase();
@@ -304,7 +341,7 @@
         const r = await fetch(FORM_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ email, handle, source: 'coming-soon' })
+          body: JSON.stringify({ email, handle, ref: REF, source: 'coming-soon' })
         });
         ok = r.ok;
       } catch { ok = false; }
@@ -312,8 +349,27 @@
 
     if (ok) {
       successMsg.innerHTML = handle
-        ? `<b>@${handle}</b> is on the founding-creator list. We'll write to <b>${email}</b> before doors open.`
+        ? `<b>@${handle}</b> is on the founding-creator list. We'll write to <b>${email}</b> before doors open. Every claim through your link moves you up the list.`
         : `We'll write to <b>${email}</b> before doors open. First claim on handles goes to the waitlist.`;
+
+      const myLink = location.origin + '/' + (handle ? '?r=' + handle : '');
+      const shareText = handle
+        ? `Reserved medusaelite.com/@${handle}. Your fans, your data, your empire — the coven is assembling.`
+        : `On the founding-creator list. Your fans, your data, your empire — the coven is assembling.`;
+      document.getElementById('shareX').href =
+        'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText) +
+        '&url=' + encodeURIComponent(myLink);
+      const copyBtn = document.getElementById('shareCopy');
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(myLink);
+          copyBtn.textContent = 'Copied';
+          setTimeout(() => { copyBtn.textContent = 'Copy my link'; }, 2000);
+        } catch {
+          prompt('Copy your link:', myLink);
+        }
+      });
+
       form.style.display = 'none';
       successBox.style.display = 'block';
       successBox.style.animationDelay = '0s';
