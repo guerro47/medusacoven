@@ -1,0 +1,153 @@
+@import 'tailwindcss';
+
+/* ── MedusaElite tokens (mirrors lib/design-tokens.ts) ─────────────── */
+@theme {
+  --color-ink: #0a0a0a;
+  --color-ink-deep: #000000;
+  --color-ink-elevated: #111009;
+  --color-bone: #ede6d6;
+  --color-bone-muted: rgba(237, 230, 214, 0.52);
+  --color-bone-faint: rgba(237, 230, 214, 0.32);
+  --color-gold: #d4af37;
+  --color-gold-hi: #f0d68a;
+  --color-gold-dim: rgba(212, 175, 55, 0.28);
+  --color-gold-line: rgba(212, 175, 55, 0.16);
+  --color-serpent-from: #7c3aed;
+  --color-serpent-to: #22d3ee;
+
+  --font-display: var(--font-syne);
+  --font-body: var(--font-dm-sans);
+  --font-mono: var(--font-space-mono);
+
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-micro: 180ms;
+  --duration-transition: 320ms;
+  --duration-cinematic: 640ms;
+}
+
+/* ── base ──────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-bone);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100svh;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── atmosphere ────────────────────────────────────────────────────── */
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 62% 48% at 50% 38%, rgba(212, 175, 55, 0.09), transparent 68%),
+    radial-gradient(ellipse 120% 90% at 50% 115%, rgba(212, 175, 55, 0.05), transparent 60%);
+}
+
+.grain {
+  position: fixed;
+  inset: -100%;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 8s steps(10) infinite;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-2%, -2%); }
+  80% { transform: translate(3%, 3%); }
+}
+
+/* ── entrance choreography ─────────────────────────────────────────── */
+.rise {
+  opacity: 0;
+  transform: translateY(22px);
+  animation: rise 0.85s var(--ease-cinematic) forwards;
+}
+
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise-d1 { animation-delay: 0.15s; }
+.rise-d2 { animation-delay: 0.3s; }
+.rise-d3 { animation-delay: 0.5s; }
+.rise-d4 { animation-delay: 0.7s; }
+.rise-d5 { animation-delay: 0.9s; }
+
+/* ── gold sheen for the display accent ─────────────────────────────── */
+.gold-sheen {
+  color: transparent;
+  background: linear-gradient(105deg, var(--color-gold) 15%, var(--color-gold-hi) 50%, var(--color-gold) 85%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: sheen 6s ease-in-out 3s infinite;
+}
+
+@keyframes sheen {
+  0%, 100% { background-position: 0% 0; }
+  50% { background-position: 100% 0; }
+}
+
+/* ── serpent gradient — Coven + live-state only ────────────────────── */
+.serpent-text {
+  color: transparent;
+  background: linear-gradient(100deg, var(--color-serpent-from), var(--color-serpent-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.serpent-line {
+  background: linear-gradient(90deg, var(--color-serpent-from), var(--color-serpent-to));
+}
+
+@keyframes serpent-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
+  60% { box-shadow: 0 0 32px 6px rgba(34, 211, 238, 0.25); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); }
+}
+
+.serpent-pulse {
+  animation: serpent-pulse 1.6s var(--ease-cinematic);
+}
+
+/* ── reduced motion ────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  .rise {
+    opacity: 1;
+    transform: none;
+  }
+}
