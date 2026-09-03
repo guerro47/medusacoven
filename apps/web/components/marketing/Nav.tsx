@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { SiteSearch } from './SiteSearch';
 
 const links = [
   { href: '/access-pass', label: 'Access Pass' },
@@ -41,12 +42,15 @@ export function Nav() {
           })}
         </div>
 
-        <Link
-          href="/#waitlist"
-          className="rounded-full border border-gold-dim px-4 py-2 text-[0.68rem] font-medium uppercase tracking-[0.22em] text-gold transition-colors duration-(--duration-micro) hover:border-gold hover:text-gold-hi"
-        >
-          Join waitlist
-        </Link>
+        <div className="flex items-center gap-3">
+          <SiteSearch />
+          <Link
+            href="/#waitlist"
+            className="rounded-full border border-gold-dim px-4 py-2 text-[0.68rem] font-medium uppercase tracking-[0.22em] text-gold transition-colors duration-(--duration-micro) hover:border-gold hover:text-gold-hi"
+          >
+            Join waitlist
+          </Link>
+        </div>
       </nav>
     </header>
   );

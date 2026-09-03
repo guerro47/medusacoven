@@ -52,7 +52,7 @@ export function RoadmapSection({ standalone = false }: { standalone?: boolean })
           {ROADMAP_MODULES.map((m) => {
             const isCoven = m.slug === 'coven';
             return (
-              <Card key={m.slug} className="h-full">
+              <Card key={m.slug} id={m.slug} className="h-full scroll-mt-28">
                 <div className="flex items-center gap-3">
                   <Badge tone="muted">Coming Soon</Badge>
                   {isCoven ? (

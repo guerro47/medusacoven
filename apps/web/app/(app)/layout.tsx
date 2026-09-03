@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { DashboardShell } from '@/components/modules/DashboardShell';
 import { getSession, SESSION_COOKIE } from '@/lib/stytch';
 import { isAgeVerified } from '@/lib/age-gate';
 
@@ -16,5 +17,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const session = await getSession(cookieStore.get(SESSION_COOKIE)?.value);
   if (!session) redirect('/login');
 
-  return <main className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-24 pt-16 sm:px-10">{children}</main>;
+  return (
+    <DashboardShell role={session.role} entitlements={session.entitlements}>
+      {children}
+    </DashboardShell>
+  );
 }
