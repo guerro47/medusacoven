@@ -1,4 +1,6 @@
 import 'server-only';
+import { cache } from 'react';
+import { cookies } from 'next/headers';
 import * as stytch from 'stytch';
 
 /**
@@ -40,6 +42,16 @@ export function getStytch(): stytch.Client | null {
   }
   return client;
 }
+
+/**
+ * Read + authenticate the session from the me_session cookie, memoized
+ * per request (React cache) so the (app) layout and module pages share
+ * one Stytch round-trip.
+ */
+export const getSessionFromCookies = cache(async (): Promise<SessionClaims | null> => {
+  const cookieStore = await cookies();
+  return getSession(cookieStore.get(SESSION_COOKIE)?.value);
+});
 
 /**
  * Authenticate the session token from the me_session cookie.

@@ -61,6 +61,21 @@ const eslintConfig = [
               message: 'Payment rails never leak into the marketing surface.',
             },
             {
+              target: './components/marketing',
+              from: './modules',
+              message: 'The marketing surface must ship without the module domain layer.',
+            },
+            {
+              target: './components/ui',
+              from: './modules',
+              message: 'Design-system primitives must not depend on the module domain layer.',
+            },
+            {
+              target: './components/3d',
+              from: './modules',
+              message: '3D scenes must not depend on the module domain layer.',
+            },
+            {
               target: './components/3d',
               from: './lib/high-risk-payments.ts',
               message: 'Payment rails never leak into 3D scenes.',
