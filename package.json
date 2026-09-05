@@ -2,7 +2,7 @@
   "name": "medusacoven",
   "private": true,
   "version": "1.0.0",
-  "description": "MedusaElite — monetization operating system for creators. Monorepo root.",
+  "description": "MedusaElite \u2014 monetization operating system for creators. Monorepo root.",
   "workspaces": [
     "apps/*"
   ],
@@ -17,8 +17,5 @@
   },
   "engines": {
     "node": ">=20"
-  },
-  "dependencies": {
-    "next": "^15.5.0"
   }
 }

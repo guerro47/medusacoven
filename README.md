@@ -50,11 +50,15 @@ npm run ci           # brand gate → lint → typecheck → build (same as CI)
 
 ## Deploy (Vercel)
 
-Monorepo: set the project's **Root Directory to `apps/web`** (framework:
-Next.js, auto-detected). Environment variables per `apps/web/.env.example` —
-Supabase anon credentials for the waitlist, Stytch keys when the beta opens.
-Canonical domain: `medusacoven.vercel.app` → future production domain; never
-per-deployment URLs in public links.
+The Vercel project `medusacoven` is linked to this repository with
+**Root Directory `apps/web`** (framework: Next.js, auto-detected) and
+production branch `main` — every push to `main` deploys production. Do not
+add a root-level vercel.json: with the Root Directory set, it either gets
+ignored or (worse) doubles the output path. Publishable client config ships
+in `apps/web/lib/public-config.ts`; env vars override it, and secrets
+(Stytch, service role, processor credentials) are env-only per
+`apps/web/.env.example`. Canonical domain: `medusacoven.vercel.app` → future
+production domain; never per-deployment URLs in public links.
 
 ## Waitlist backend
 
