@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { DM_Sans, Space_Mono, Syne } from 'next/font/google';
+import { SITE_URL } from '@/lib/public-config';
 import '@/styles/globals.css';
 
 const syne = Syne({
@@ -24,7 +25,7 @@ const spaceMono = Space_Mono({
 });
 
 // Canonical domain only — never per-deployment URLs in public links.
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://medusacoven.vercel.app';
+// SITE_URL comes from lib/public-config (blank env falls back to the default).
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

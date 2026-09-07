@@ -13,11 +13,19 @@
  * processor credentials are env-only (see .env.example).
  */
 
+// `?? default` only catches null/undefined — an env var set to an empty (or
+// whitespace) string slips through and, for a URL, makes `new URL('')` throw at
+// build time (metadataBase, sitemap). Treat blank as unset.
+const envOr = (value: string | undefined, fallback: string) =>
+  value && value.trim() !== '' ? value : fallback;
+
+export const SITE_URL = envOr(process.env.NEXT_PUBLIC_SITE_URL, 'https://medusacoven.vercel.app');
+
 export const publicConfig = {
-  supabaseUrl:
-    process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://hjptokbnsnnrinwtufao.supabase.co',
-  supabaseAnonKey:
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+  supabaseUrl: envOr(process.env.NEXT_PUBLIC_SUPABASE_URL, 'https://hjptokbnsnnrinwtufao.supabase.co'),
+  supabaseAnonKey: envOr(
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     'sb_publishable_kc5nTVXeHdp8ImTkwIjZ9g_0qR5c2aF',
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://medusacoven.vercel.app',
+  ),
+  siteUrl: SITE_URL,
 } as const;
