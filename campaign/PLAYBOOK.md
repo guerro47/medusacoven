@@ -1,4 +1,4 @@
-# THE COVEN ASSEMBLES
+# The Coven Assembles
 ### MedusaElite pre-launch viral campaign — playbook v1
 
 **Objective:** fill the founding-creator waitlist before Q4 2026 doors-open, at near-zero paid spend, without ever feeling like an ad.
@@ -20,12 +20,12 @@
 
 | Mechanic | Where | Why it spreads |
 |---|---|---|
-| Rich share card | `og.png` + OG/Twitter meta on `index.html` | Every pasted link renders the gold ring + "Your Fans. Your Data. Your Empire." — the link *is* the ad. |
-| Handle reservation | Waitlist form | Claiming `medusaelite.com/@name` is a possession, not a signup. Possessions get screenshotted. |
-| Referral loop | `?r=<handle>` param → `ref` in the payload | "Every claim through your link moves you up the list." Position on the list becomes the game. |
+| Rich share card | `apps/web/app/opengraph-image.tsx` (site link previews) + `campaign/og.png` (static render for posts) | Every pasted link renders the gold ring + "Your Fans. Your Data. Your Empire." — the link *is* the ad. |
+| Handle reservation | Waitlist form (`apps/web/components/marketing/WaitlistForm.tsx`) | Claiming `medusaelite.com/@name` is a possession, not a signup. Possessions get screenshotted. |
+| Referral loop | `?r=<handle>` param → recorded in the waitlist row's `source` as `marketing:r=<handle>` (`apps/web/actions/waitlist.ts`) | "Every claim through your link moves you up the list." Position on the list becomes the game. |
 | Share moment | Success box: "Share on X" + "Copy my link" | The one moment users are proudest — the claim — is the one moment we ask them to share. |
 
-Backend note: the `ref` field arrives with each signup. Rank the waitlist by referred-claim count; that ranking powers Phase 2.
+Backend note: each referred signup carries `marketing:r=<handle>` in `source`. Rank the waitlist by referred-claim count (`select split_part(source, 'r=', 2), count(*) …`); that ranking powers Phase 2.
 
 ---
 
@@ -91,9 +91,10 @@ The referral ranking goes public-ish: each waitlister can see their own position
 
 | Asset | Path | Status |
 |---|---|---|
-| Share card (1200×630) | `/og.png` | ✅ shipped |
+| Share card, static render (1200×630) | `campaign/og.png` | ✅ shipped — for social posts; re-render from `campaign/og-card.html` |
 | Share card source | `campaign/og-card.html` | ✅ (self-contained; re-render with the command in the file header) |
-| OG/Twitter meta | `index.html` | ✅ shipped — update host when custom domain lands |
-| Referral capture + share moment | `index.html` | ✅ shipped |
+| Site link previews (OG image + meta) | `apps/web/app/opengraph-image.tsx` + root layout metadata | ✅ shipped with the platform |
+| Referral capture | `apps/web/components/marketing/WaitlistForm.tsx` → `apps/web/actions/waitlist.ts` | ✅ shipped |
+| Post-signup share moment | `apps/web/components/marketing/WaitlistForm.tsx` | ✅ shipped |
 | Whisper type cards | — | render from copy bank, same tokens as og-card |
 | Creator seed list | — | founder-curated, keep private |

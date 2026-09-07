@@ -1,0 +1,21 @@
+{
+  "name": "medusacoven",
+  "private": true,
+  "version": "1.0.0",
+  "description": "MedusaElite \u2014 monetization operating system for creators. Monorepo root.",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w apps/web",
+    "build": "npm run build -w apps/web",
+    "start": "npm run start -w apps/web",
+    "lint": "npm run lint -w apps/web",
+    "typecheck": "npm run typecheck -w apps/web",
+    "check:brand": "node scripts/check-brand.mjs",
+    "ci": "npm run check:brand && npm run lint && npm run typecheck && npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
