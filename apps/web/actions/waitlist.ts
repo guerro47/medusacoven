@@ -23,6 +23,12 @@ export async function joinWaitlist(_prev: WaitlistResult | null, formData: FormD
   const handle = rawHandle.length > 0 ? rawHandle : null;
   if (handle && !HANDLE_SHAPE.test(handle)) return { error: 'invalid_handle' };
 
+  // Referral credit from a shared ?r=<handle> link. Recorded inside `source`
+  // (no schema change); a malformed or self-referring value is dropped, never
+  // an error — referral is a bonus, not a gate.
+  const rawRef = String(formData.get('ref') ?? '').toLowerCase().trim();
+  const ref = HANDLE_SHAPE.test(rawRef) && rawRef !== handle ? rawRef : null;
+
   const supabase = getSupabase();
   if (!supabase) {
     // No fake success, ever: if the backend isn't reachable we say so.
@@ -32,7 +38,7 @@ export async function joinWaitlist(_prev: WaitlistResult | null, formData: FormD
   const { error } = await supabase.from('waitlist').insert({
     email,
     handle,
-    source: 'marketing',
+    source: ref ? `marketing:r=${ref}` : 'marketing',
   });
 
   if (error?.code === '23505') {

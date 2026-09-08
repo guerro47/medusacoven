@@ -1,6 +1,5 @@
 import type { MetadataRoute } from 'next';
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://medusacoven.vercel.app';
+import { SITE_URL } from '@/lib/public-config';
 
 const routes = ['', '/access-pass', '/drops', '/tips', '/roadmap', '/privacy', '/terms', '/acceptable-use', '/cookies'];
 

@@ -65,3 +65,15 @@ production domain; never per-deployment URLs in public links.
 Apply `supabase/migrations/0001_waitlist.sql` to the Supabase project
 (`supabase db push` or the SQL editor). The anon role can only insert;
 reads require the service role.
+
+## Campaign
+
+- `campaign/PLAYBOOK.md` — "The Coven Assembles" pre-launch viral playbook
+  (phases, copy bank, ground rules).
+- `campaign/og-card.html` → `campaign/og.png` — static share-card render for
+  social posts (the site's own link previews come from
+  `apps/web/app/opengraph-image.tsx`).
+- Referral loop: visits with `?r=<handle>` credit that handle — the waitlist
+  form carries it and the server action records it in `source` as
+  `marketing:r=<handle>` (no schema change). The post-signup success box
+  offers "Share on X" and a copy-able personal referral link.
